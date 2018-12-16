@@ -1,2 +1,1 @@
-This product includes software originally developed by IBM Corporation
-Copyright 2017 IBM Corp.
+Developed by Manas Taneja
