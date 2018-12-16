@@ -70,6 +70,10 @@ public class MainActivity extends AppCompatActivity {
   private SpeechToText speechService;
   private TextToSpeech textToSpeech;
 
+  /**
+   * creating services (watson assistant, text to speech, speech to text)
+   */
+
   private void createServices() {
     watsonAssistant = new Assistant("2018-11-08", new IamOptions.Builder()
       .apiKey(mContext.getString(R.string.assistant_apikey))
@@ -85,6 +89,11 @@ public class MainActivity extends AppCompatActivity {
       .apiKey(mContext.getString(R.string.STT_apikey))
       .build());
   }
+
+  /**
+   *
+   * @param savedInstanceState = inputting a bundle for the on creation method
+   */
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -124,8 +133,18 @@ public class MainActivity extends AppCompatActivity {
       Log.i(TAG, "Permission to record was already granted");
     }
 
+    /**
+     * adding a listener to the recycler view for when an item is touched
+     */
 
     recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
+
+      /**
+       *
+       * @param view = inputting the view
+       * @param position = inputting the position which is an integer representing the position in the message ArrayList
+       */
+
       @Override
       public void onClick(View view, final int position) {
         Message audioMessage = (Message) messageArrayList.get(position);
@@ -134,12 +153,22 @@ public class MainActivity extends AppCompatActivity {
         }
       }
 
+      /**
+       *
+       * @param view = inputting the view
+       * @param position = inputting the position which is an integer representing the position in the message ArrayList
+       */
+
       @Override
       public void onLongClick(View view, int position) {
         recordMessage();
 
       }
     }));
+
+    /**
+     * adding a listener to the send button for when it is touched
+     */
 
     btnSend.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -149,6 +178,10 @@ public class MainActivity extends AppCompatActivity {
         }
       }
     });
+
+    /**
+     * adding a listener to the record button for when it is touched
+     */
 
     btnRecord.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -162,6 +195,13 @@ public class MainActivity extends AppCompatActivity {
   }
 
   ;
+
+  /**
+   *
+   * @param requestCode = an integer representing the the code for the request asking for permission to record
+   * @param permissions = an array of Strings holding permissions
+   * @param grantResults = an array of integers holding the grant results
+   */
 
   // Speech-to-Text Record Audio permission
   @Override
@@ -194,11 +234,19 @@ public class MainActivity extends AppCompatActivity {
 
   }
 
+  /**
+   * make a request to record audio
+   */
+
   protected void makeRequest() {
     ActivityCompat.requestPermissions(this,
       new String[]{Manifest.permission.RECORD_AUDIO},
       MicrophoneHelper.REQUEST_PERMISSION);
   }
+
+  /**
+   * send user's message to the watson assistant
+   */
 
   // Sending a message to Watson Assistant Service
   private void sendMessage() {
@@ -220,6 +268,10 @@ public class MainActivity extends AppCompatActivity {
 
     this.inputMessage.setText("");
     mAdapter.notifyDataSetChanged();
+
+    /**
+     * runnable thread that is the interaction with the watson assistant for messaging
+     */
 
     Thread thread = new Thread(new Runnable() {
       public void run() {
@@ -273,7 +325,18 @@ public class MainActivity extends AppCompatActivity {
 
   }
 
+  /**
+   * a class that for working with the speech input
+   */
+
   private class SayTask extends AsyncTask<String, Void, String> {
+
+    /**
+     *
+     * @param params = inputting a String... type
+     * @return returns a string when the audio synthesizes
+     */
+
     @Override
     protected String doInBackground(String... params) {
       streamPlayer.playStream(textToSpeech.synthesize(new SynthesizeOptions.Builder()
@@ -285,11 +348,20 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
+  /**
+   * record the message using watson's speech to text
+   */
+
   //Record a message via Watson Speech to Text
   private void recordMessage() {
     if (listening != true) {
       capture = microphoneHelper.getInputStream(true);
       new Thread(new Runnable() {
+
+        /**
+         * a runnable thread the recognizes the use of a web socket
+         */
+
         @Override
         public void run() {
           try {
@@ -317,7 +389,7 @@ public class MainActivity extends AppCompatActivity {
   /**
    * Check Internet Connection
    *
-   * @return
+   * @return returns a boolean that tells whether or not there is an interent connection
    */
   private boolean checkInternetConnection() {
     // get Connectivity Manager object to check connection
@@ -338,6 +410,12 @@ public class MainActivity extends AppCompatActivity {
 
   }
 
+  /**
+   *
+   * @param audio = the input stream of audio
+   * @return returns a new builder for options recognition
+   */
+
   //Private Methods - Speech to Text
   private RecognizeOptions getRecognizeOptions(InputStream audio) {
     return new RecognizeOptions.Builder()
@@ -349,6 +427,10 @@ public class MainActivity extends AppCompatActivity {
       .build();
   }
 
+  /**
+   * class for delegating the microphone recognition when an internet connection exists
+   */
+
   //Watson Speech to Text Methods.
   private class MicrophoneRecognizeDelegate extends BaseRecognizeCallback {
     @Override
@@ -359,11 +441,20 @@ public class MainActivity extends AppCompatActivity {
       }
     }
 
+    /**
+     *
+     * @param e = an exception for when there is an error
+     */
+
     @Override
     public void onError(Exception e) {
       showError(e);
       enableMicButton();
     }
+
+    /**
+     * a method for dealing with the mic when disconnected
+     */
 
     @Override
     public void onDisconnected() {
@@ -371,6 +462,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
   }
+
+  /**
+   *
+   * @param text = inputting the text that was translated from human speech to be put on screen
+   */
 
   private void showMicText(final String text) {
     runOnUiThread(new Runnable() {
@@ -381,6 +477,10 @@ public class MainActivity extends AppCompatActivity {
     });
   }
 
+  /**
+   * method for when the mic button is clicked and when it si disabled
+   */
+
   private void enableMicButton() {
     runOnUiThread(new Runnable() {
       @Override
@@ -389,6 +489,11 @@ public class MainActivity extends AppCompatActivity {
       }
     });
   }
+
+  /**
+   *
+   * @param e = inputting an exception for when an error needs to be shown
+   */
 
   private void showError(final Exception e) {
     runOnUiThread(new Runnable() {
