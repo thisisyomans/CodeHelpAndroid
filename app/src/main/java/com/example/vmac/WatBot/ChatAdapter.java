@@ -21,11 +21,22 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
   private int SELF = 100;
   private ArrayList<Message> messageArrayList;
 
+  /**
+   *
+   * @param messageArrayList = inputting an ArrayList of messages
+   */
 
   public ChatAdapter(ArrayList<Message> messageArrayList) {
     this.messageArrayList = messageArrayList;
 
   }
+
+  /**
+   *
+   * @param parent = inputting the parent of the view (which is a ViewGroup)
+   * @param viewType = inputting the type of the view
+   * @return returns a new ViewHolder with an itemView passed into it
+   */
 
   @Override
   public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -47,6 +58,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     return new ViewHolder(itemView);
   }
 
+  /**
+   *
+   * @param position = inputting an integer position (for the message ArrayList)
+   * @return returns the position
+   */
+
   @Override
   public int getItemViewType(int position) {
     Message message = messageArrayList.get(position);
@@ -57,6 +74,12 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     return position;
   }
 
+  /**
+   *
+   * @param holder = inputting a view holder
+   * @param position = inputting an integer position (for the message ArrayList)
+   */
+
   @Override
   public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
     Message message = messageArrayList.get(position);
@@ -64,13 +87,27 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     ((ViewHolder) holder).message.setText(message.getMessage());
   }
 
+  /**
+   *
+   * @return returns the size of the message ArrayList
+   */
+
   @Override
   public int getItemCount() {
     return messageArrayList.size();
   }
 
+  /**
+   * this is the view holder class used as a parameter up above
+   */
+
   public class ViewHolder extends RecyclerView.ViewHolder {
     TextView message;
+
+    /**
+     *
+     * @param view = inputting the view
+     */
 
     public ViewHolder(View view) {
       super(view);
